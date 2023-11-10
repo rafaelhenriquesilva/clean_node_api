@@ -6,7 +6,6 @@ const InavlidParamError = require('../helpers/invalid-param-error')
 const makeSut = () => {
   const authUseCaseSpy = makeAuthUseCase()
   const emailValidatorSpy = makeEmailValidator()
-  authUseCaseSpy.accessToken = 'valid_token'
   return {
     sut: new LoginRouter(authUseCaseSpy, emailValidatorSpy),
     authUseCaseSpy,
@@ -36,8 +35,10 @@ const makeAuthUseCase = () => {
       return this.accessToken
     }
   }
+  const authUseCaseSpy = new AuthUseCaseSpy()
+  authUseCaseSpy.accessToken = 'valid_token'
 
-  return new AuthUseCaseSpy()
+  return authUseCaseSpy
 }
 
 const makeAuthUseCaseWithError = () => {
