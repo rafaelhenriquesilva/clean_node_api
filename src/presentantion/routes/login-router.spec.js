@@ -152,7 +152,7 @@ describe('Login Router', () => {
   test('Should return 500 whith AuthUseCase throws', async () => {
     const authUseCaseSpy = makeAuthUseCaseWithError()
     authUseCaseSpy.accessToken = 'valid_token'
-    const sut = new LoginRouter({})
+    const sut = new LoginRouter(authUseCaseSpy)
     const httpRequest = {
       body: {
         email: 'any_email@gmail.com',
