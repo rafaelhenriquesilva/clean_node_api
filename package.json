@@ -4,8 +4,10 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "jest --watchAll --silent --colors --coverage --noStackTrace",
-    "test:ci": "jest --coverage"
+    "test": "jest --silent --colors --coverage --noStackTrace --passWithNoTests",
+    "test:unit": "npm test -- --watchAll -c jest-unit-config.js",
+    "test:integration": "npm test -- --watch -c jest-integration-config.js",
+    "test:ci": "npm test --"
   },
   "lint-staged": {
     "*.js": [
