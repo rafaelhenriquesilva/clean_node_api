@@ -16,7 +16,9 @@
     ]
   },
   "standard": {
-    "env": ["jest"]
+    "env": [
+      "jest"
+    ]
   },
   "keywords": [],
   "author": "",
@@ -25,5 +27,8 @@
     "jest": "^29.7.0",
     "lint-staged": "^15.0.2",
     "standard": "^17.1.0"
+  },
+  "dependencies": {
+    "validator": "^13.11.0"
   }
 }
