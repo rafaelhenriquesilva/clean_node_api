@@ -81,24 +81,6 @@ describe('AuthUseCase ', () => {
     expect(loadUserByEmailRepositorySpy.email).toEqual('any_email@gmail.com')
   })
 
-  test('Should throw if no loadUserByEmailRepository was provider', async () => {
-    const sut = new AuthUseCase({})
-    const promise = sut.auth('any_email@gmail.com', 'any_password')
-    expect(promise).rejects.toThrow()
-  })
-
-  test('Should  if no dependecy was provider', async () => {
-    const sut = new AuthUseCase()
-    const promise = sut.auth('any_email@gmail.com', 'any_password')
-    expect(promise).rejects.toThrow()
-  })
-
-  test('Should throw if loadUserByEmailRepository has no load method', async () => {
-    const sut = new AuthUseCase({ loadUserByEmailRepository: {} })
-    const promise = sut.auth('any_email@gmail.com', 'any_password')
-    expect(promise).rejects.toThrow()
-  })
-
   test('Should return null if an invalid email was provider', async () => {
     const { sut, loadUserByEmailRepositorySpy } = makeSut()
     loadUserByEmailRepositorySpy.user = null
@@ -132,5 +114,25 @@ describe('AuthUseCase ', () => {
     expect(accessToken).toBe(tokenGeneratorSpy.accessToken)
     // toBeTruthy - retorno que tenha valor
     expect(accessToken).toBeTruthy()
+  })
+
+  test('Should  if invalid dependecies is provided', async () => {
+    const emptyObject = {}
+    const loadUserByEmailRepository = makeLoadUserByEmailRepositorySpy()
+    const encrypter = makeEncrypter()
+    const suts = [].concat(
+      new AuthUseCase(),
+      new AuthUseCase({}),
+      new AuthUseCase({ loadUserByEmailRepository: emptyObject }),
+      new AuthUseCase({ loadUserByEmailRepository }),
+      new AuthUseCase({ loadUserByEmailRepository, encrypter: emptyObject }),
+      new AuthUseCase({ loadUserByEmailRepository, encrypter }),
+      new AuthUseCase({ loadUserByEmailRepository, encrypter, tokenGenerator: emptyObject })
+    )
+
+    for (const sut of suts) {
+      const promise = sut.auth('any_email@gmail.com', 'any_password')
+      expect(promise).rejects.toThrow()
+    }
   })
 })
