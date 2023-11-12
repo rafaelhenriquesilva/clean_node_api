@@ -4,6 +4,7 @@ module.exports = class AuthUseCase {
     this.loadUserByEmailRepository = args.loadUserByEmailRepository
     this.encrypter = args.encrypter
     this.tokenGenerator = args.tokenGenerator
+    this.updateAccessTokenRepository = args.updateAccessTokenRepository
   }
 
   async auth (email, password) {
@@ -17,6 +18,7 @@ module.exports = class AuthUseCase {
     const isValid = user && await this.encrypter.compare(password, user.password)
     if (user && isValid) {
       const token = await this.tokenGenerator.generate(user.id)
+      if (this.updateAccessTokenRepository) await this.updateAccessTokenRepository.update(user.id, token)
       return token
     }
 
