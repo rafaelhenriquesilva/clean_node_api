@@ -15,7 +15,7 @@ const makeEncrypter = () => {
   return encrypterSpy
 }
 
-const makeTokenGeneratorSpy = () => {
+const makeTokenGenerator = () => {
   class TokenGeneratorSpy {
     async generate (userId) {
       this.userId = userId
@@ -28,7 +28,28 @@ const makeTokenGeneratorSpy = () => {
   return tokenGeneratorSpy
 }
 
-const makeLoadUserByEmailRepositorySpy = () => {
+const makeEncrypterWithError = () => {
+  class EncrypterSpy {
+    async compare () {
+      throw new Error()
+    }
+  }
+  const encrypterSpy = new EncrypterSpy()
+
+  return encrypterSpy
+}
+
+const makeTokenGeneratorWithError = () => {
+  class TokenGeneratorSpy {
+    async generate () {
+      throw new Error()
+    }
+  }
+  const tokenGeneratorSpy = new TokenGeneratorSpy()
+  return tokenGeneratorSpy
+}
+
+const makeLoadUserByEmailRepository = () => {
   class LoadUserByEmailRepositorySpy {
     email = ''
     async load (email) {
@@ -48,8 +69,8 @@ const makeLoadUserByEmailRepositorySpy = () => {
 
 const makeSut = () => {
   const encrypterSpy = makeEncrypter()
-  const loadUserByEmailRepositorySpy = makeLoadUserByEmailRepositorySpy()
-  const tokenGeneratorSpy = makeTokenGeneratorSpy()
+  const loadUserByEmailRepositorySpy = makeLoadUserByEmailRepository()
+  const tokenGeneratorSpy = makeTokenGenerator()
   const sut = new AuthUseCase({
     loadUserByEmailRepository: loadUserByEmailRepositorySpy,
     encrypter: encrypterSpy,
@@ -62,6 +83,18 @@ const makeSut = () => {
     encrypterSpy,
     tokenGeneratorSpy
   }
+}
+
+const makeLoadUserByEmailRepositoryWithError = () => {
+  class LoadUserByEmailRepositorySpy {
+    load () {
+      throw new Error()
+    }
+  }
+
+  const loadUserByEmailRepositorySpy = new LoadUserByEmailRepositorySpy()
+
+  return loadUserByEmailRepositorySpy
 }
 
 describe('AuthUseCase ', () => {
@@ -118,7 +151,7 @@ describe('AuthUseCase ', () => {
 
   test('Should  if invalid dependecies is provided', async () => {
     const emptyObject = {}
-    const loadUserByEmailRepository = makeLoadUserByEmailRepositorySpy()
+    const loadUserByEmailRepository = makeLoadUserByEmailRepository()
     const encrypter = makeEncrypter()
     const suts = [].concat(
       new AuthUseCase(),
@@ -128,6 +161,19 @@ describe('AuthUseCase ', () => {
       new AuthUseCase({ loadUserByEmailRepository, encrypter: emptyObject }),
       new AuthUseCase({ loadUserByEmailRepository, encrypter }),
       new AuthUseCase({ loadUserByEmailRepository, encrypter, tokenGenerator: emptyObject })
+    )
+
+    for (const sut of suts) {
+      const promise = sut.auth('any_email@gmail.com', 'any_password')
+      expect(promise).rejects.toThrow()
+    }
+  })
+
+  test('Should  if dependecies throws', async () => {
+    const suts = [].concat(
+      new AuthUseCase({ loadUserByEmailRepository: makeLoadUserByEmailRepositoryWithError() }),
+      new AuthUseCase({ loadUserByEmailRepository: makeLoadUserByEmailRepository(), encrypter: makeEncrypterWithError() }),
+      new AuthUseCase({ loadUserByEmailRepository: makeLoadUserByEmailRepository(), encrypter: makeEncrypter(), tokenGenerator: makeTokenGeneratorWithError() })
     )
 
     for (const sut of suts) {
