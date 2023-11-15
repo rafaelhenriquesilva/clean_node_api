@@ -1,0 +1,21 @@
+version: '3.8'
+
+services:
+  local-mysql:
+    image: mysql:latest
+    container_name: local-mysql
+    environment:
+      MYSQL_ROOT_PASSWORD: local@1234
+    ports:
+      - "3306:3306"
+    networks:
+      - database-network
+
+networks:
+  database-network:
+    driver: bridge
+
+
+# RUN: docker-compose up -d
+# Verify comand: docker-compose ps
+# Kill: docker-compose down
