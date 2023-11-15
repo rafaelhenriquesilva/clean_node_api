@@ -1,6 +1,10 @@
 module.exports = {
   isValid: true,
-  async compare (value, anyHash) {
+  value: '',
+  hash: '',
+  async compare (value, hash) {
+    this.value = value
+    this.hash = hash
     return this.isValid
   }
 }
