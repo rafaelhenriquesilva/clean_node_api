@@ -1,7 +1,7 @@
-const UserModel = require('./user.model')
+const UserModel = require('../model/user.model')
 const LoadUserByEmailRepository = require('./load-user-by-email-repository')
 const UserRepository = require('./user-repository')
-const Database = require('./database')
+const Database = require('../config/database')
 describe('LoadUserByEmail Repository', () => {
   let database, connection
   beforeAll(async () => {
