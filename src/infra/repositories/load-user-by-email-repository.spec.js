@@ -2,6 +2,16 @@ const UserModel = require('../model/user.model')
 const LoadUserByEmailRepository = require('./load-user-by-email-repository')
 const UserRepository = require('./user-repository')
 const Database = require('../config/database')
+
+const makeSut = () => {
+  const userRepository = new UserRepository(UserModel)
+  const loadUserRepository = new LoadUserByEmailRepository(userRepository)
+  return {
+    userRepository,
+    loadUserRepository
+  }
+}
+
 describe('LoadUserByEmail Repository', () => {
   let database, connection
   beforeAll(async () => {
@@ -10,7 +20,7 @@ describe('LoadUserByEmail Repository', () => {
   })
 
   beforeEach(async () => {
-    const userRepository = new UserRepository(UserModel)
+    const { userRepository } = makeSut()
     await userRepository.deleteAllUsers()
   })
 
@@ -19,16 +29,14 @@ describe('LoadUserByEmail Repository', () => {
   })
 
   test('Should return null if no user is found', async () => {
-    const userRepository = new UserRepository(UserModel)
-    const loadUserRepository = new LoadUserByEmailRepository(userRepository)
+    const { loadUserRepository } = makeSut()
 
     const user = await loadUserRepository.load('invalid_email@mail.com')
     expect(user).toEqual([])
   }, 15000)
 
   test('Should return email if user is found', async () => {
-    const userRepository = new UserRepository(UserModel)
-    const loadUserRepository = new LoadUserByEmailRepository(userRepository)
+    const { userRepository, loadUserRepository } = makeSut()
     await userRepository.insertUser('alice@example.com')
 
     const user = await loadUserRepository.load('alice@example.com')
