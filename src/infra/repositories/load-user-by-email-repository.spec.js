@@ -13,10 +13,10 @@ const makeSut = () => {
 }
 
 describe('LoadUserByEmail Repository', () => {
-  let database, connection
+  let database
   beforeAll(async () => {
     database = new Database()
-    connection = await database.connect('local')
+    await database.connect('local')
   })
 
   beforeEach(async () => {
@@ -25,7 +25,7 @@ describe('LoadUserByEmail Repository', () => {
   })
 
   afterAll(async () => {
-    await connection.close()
+    await database.disconnect()
   })
 
   test('Should return null if no user is found', async () => {
@@ -41,5 +41,12 @@ describe('LoadUserByEmail Repository', () => {
 
     const user = await loadUserRepository.load('alice@example.com')
     expect(user[0].email).toBe('alice@example.com')
+  }, 15000)
+
+  test('Should throw if no UserRepository is provider', async () => {
+    const loadUserRepository = new LoadUserByEmailRepository()
+
+    const promise = loadUserRepository.load('any_email@example.com')
+    expect(promise).rejects.toThrow()
   }, 15000)
 })
