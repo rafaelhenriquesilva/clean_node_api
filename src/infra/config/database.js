@@ -21,6 +21,10 @@ class Database {
 
     return this.db
   }
+
+  async disconnect () {
+    this.db.close()
+  }
 }
 
 module.exports = Database
