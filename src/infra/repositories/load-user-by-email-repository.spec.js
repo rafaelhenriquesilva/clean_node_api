@@ -2,6 +2,7 @@ const UserModel = require('../model/user.model')
 const LoadUserByEmailRepository = require('./load-user-by-email-repository')
 const UserRepository = require('./user-repository')
 const Database = require('../config/database')
+const { MissingParamError } = require('../../utils/errors')
 
 const makeSut = () => {
   const userRepository = new UserRepository(UserModel)
@@ -22,10 +23,6 @@ describe('LoadUserByEmail Repository', () => {
   beforeEach(async () => {
     const { userRepository } = makeSut()
     await userRepository.deleteAllUsers()
-  })
-
-  afterAll(async () => {
-    await database.disconnect()
   })
 
   test('Should return null if no user is found', async () => {
@@ -49,4 +46,15 @@ describe('LoadUserByEmail Repository', () => {
     const promise = loadUserRepository.load('any_email@example.com')
     expect(promise).rejects.toThrow()
   }, 15000)
+
+  test('Should throw if no email is provider', async () => {
+    const { loadUserRepository } = makeSut()
+
+    const promise = loadUserRepository.load()
+    expect(promise).rejects.toThrow(new MissingParamError('email'))
+  }, 15000)
+
+  afterAll(async () => {
+    await database.disconnect()
+  })
 })
