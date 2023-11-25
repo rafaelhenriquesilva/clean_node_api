@@ -2,28 +2,31 @@
 const mongoose = require('mongoose')
 
 class Database {
+  url = ''
+  options = {}
   async connect (dbName) {
-    const url = 'mongodb://root:example@localhost:27017/?authMechanism=DEFAULT'
-    const options = {
+    this.url = 'mongodb://root:example@localhost:27017/?authMechanism=DEFAULT'
+    this.options = {
       user: 'root',
       pass: 'example',
       dbName
     }
 
-    mongoose.connect(url, options)
+    return new Promise((resolve, reject) => {
+      mongoose.connect(this.url, this.options)
 
-    this.db = mongoose.connection
+      this.db = mongoose.connection
 
-    this.db.on('error', console.error.bind(console, 'Erro de conexão com o MongoDB:'))
-    this.db.once('open', () => {
-      console.log('Conexão bem-sucedida com o MongoDB!')
+      this.db.on('error', (error) => reject(error))
+      this.db.once('open', () => {
+        resolve(this.db)
+      })
     })
-
-    return this.db
   }
 
   async disconnect () {
-    this.db.close()
+    await this.db.close()
+    this.db = null
   }
 }
 
