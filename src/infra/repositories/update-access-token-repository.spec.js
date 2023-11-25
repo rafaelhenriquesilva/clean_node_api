@@ -70,10 +70,9 @@ describe('LoadUserByEmail Repository', () => {
 
     const userUpdated = await loadUserByEmailRepository.load('alice@example.com')
 
-    expect(!userUpdated).toBe(false)
-    expect(!userUpdated[0].token).toBe(false)
-    console.info(userUpdated)
-    expect(userUpdated[0].token).toBe('valid_token')
+    expect(!userUpdated).toEqual(false)
+    expect(!userUpdated[0].token).toEqual(false)
+    expect(userUpdated[0].token).toEqual('valid_token')
   }, 15000)
 
   test('Should call update acess token user repository any params', () => {
