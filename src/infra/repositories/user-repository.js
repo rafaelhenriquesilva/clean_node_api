@@ -27,9 +27,14 @@ class UserRepository {
     const user = await this.findByEmail(email)
 
     if (user) {
-      if (updatedFields.name) user[0].name = updatedFields.name
-      if (updatedFields.name) user[0].email = updatedFields.email
-      if (updatedFields.token) user[0].token = updatedFields.token
+      for (const field in updatedFields) {
+        if (Object.prototype.hasOwnProperty.call(updatedFields, field)) {
+          if (user[0][field] !== undefined) {
+            user[0][field] = updatedFields[field]
+          }
+        }
+      }
+
       await user[0].save()
     }
   }

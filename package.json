@@ -4,8 +4,10 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "jest --colors --coverage --noStackTrace --passWithNoTests",
-    "test:unit": "npm test -- --watchAll -c jest-unit-config.js",
+    "pretest": "rimraf node_modules/.cache/jest && docker-compose up -d",
+    "test": "jest --colors --coverage --noStackTrace --passWithNoTests ",
+    "posttest": "docker-compose down",
+    "test:unit": "npm test -- --watch -c jest-unit-config.js",
     "test:integration": "npm test -- --watch -c jest-integration-config.js",
     "test:ci": "npm test --"
   },
