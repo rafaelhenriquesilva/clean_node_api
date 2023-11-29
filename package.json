@@ -2,8 +2,9 @@
   "name": "clean_node_api",
   "version": "1.0.0",
   "description": "",
-  "main": "index.js",
+  "main": "src/main/index.js",
   "scripts": {
+    "start": "node src/main/index.js",
     "pretest": "rimraf node_modules/.cache/jest && docker-compose up -d",
     "test": "jest --colors --coverage --noStackTrace --passWithNoTests ",
     "posttest": "docker-compose down",
@@ -32,6 +33,7 @@
   },
   "dependencies": {
     "bcrypt": "^5.1.1",
+    "express": "^4.18.2",
     "jsonwebtoken": "^9.0.2",
     "mongoose": "^8.0.1",
     "validator": "^13.11.0"
