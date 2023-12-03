@@ -4,7 +4,9 @@
   "description": "",
   "main": "src/main/index.js",
   "scripts": {
+    "prestart": "docker-compose up -d",
     "start": "node src/main/index.js",
+    "poststart": "docker-compose down",
     "pretest": "rimraf node_modules/.cache/jest && docker-compose up -d",
     "test": "jest --colors --coverage --noStackTrace --passWithNoTests --runInBand",
     "posttest": "docker-compose down",
