@@ -3,7 +3,7 @@ const config = {
   coverageProvider: 'v8',
   coverageDirectory: 'coverage',
   testEnviroment: 'node',
-  collectCoverageFrom: ['**/src/**/*.js']
+  collectCoverageFrom: ['**/src/**/*.js', '!**/src/main/**']
 }
 
 module.exports = config
