@@ -6,7 +6,7 @@
   "scripts": {
     "start": "node src/main/index.js",
     "pretest": "rimraf node_modules/.cache/jest && docker-compose up -d",
-    "test": "jest --colors --coverage --noStackTrace --passWithNoTests ",
+    "test": "jest --colors --coverage --noStackTrace --passWithNoTests --runInBand",
     "posttest": "docker-compose down",
     "test:unit": "npm test -- --watchAll -c jest-unit-config.js",
     "test:integration": "npm test -- --watch -c jest-integration-config.js",
