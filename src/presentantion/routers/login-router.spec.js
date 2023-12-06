@@ -5,7 +5,10 @@ const makeSut = () => {
   const authUseCaseSpy = makeAuthUseCase()
   const emailValidatorSpy = makeEmailValidator()
   return {
-    sut: new LoginRouter(authUseCaseSpy, emailValidatorSpy),
+    sut: new LoginRouter({
+      authUseCase: authUseCaseSpy,
+      emailValidator: emailValidatorSpy
+    }),
     authUseCaseSpy,
     emailValidatorSpy
   }
