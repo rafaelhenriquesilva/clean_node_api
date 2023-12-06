@@ -3,24 +3,7 @@ const Database = require('../config/database')
 const UserModel = require('../model/user.model')
 const LoadUserByEmailRepository = require('./load-user-by-email-repository')
 const UserRepository = require('./user-repository')
-
-class UpdatedAccessTokenRepository {
-  constructor (userRepository) {
-    this.userRepository = userRepository
-  }
-
-  async updateByEmail (email, token) {
-    this.verifyInjectable()
-    if (!email) throw new MissingParamError('email')
-    if (!token) throw new MissingParamError('token')
-
-    await this.userRepository.updateUserByEmail(email, { token })
-  }
-
-  verifyInjectable () {
-    if (!this.userRepository) throw new MissingInjectableError('UserRepository')
-  }
-}
+const UpdatedAccessTokenRepository = require('./update-access-token-repository')
 
 const makeSut = () => {
   const userRepository = new UserRepository(UserModel)
